@@ -10,13 +10,13 @@ import java.awt.*;
 public class GamePanel extends JPanel {
 
     // Variables that increase or decrease rectangle position depending on user input
-    private int xDelta = 0;
-    private int yDelta = 0;
+    private int xDelta = 100;
+    private int yDelta = 100;
 
     // Constructor where input is taken care of
     public GamePanel() {
 
-        MouseInput mouseInput = new MouseInput();
+        MouseInput mouseInput = new MouseInput(this);
         addKeyListener(new KeyboardInput(this));
         addMouseListener(mouseInput);
         addMouseMotionListener(mouseInput);
@@ -36,11 +36,19 @@ public class GamePanel extends JPanel {
         repaint();
     }
 
+    // Method to draw rectangle at a given position
+    public void setRectPos(int x, int y) {
+
+        this.xDelta = x;
+        this.yDelta = y;
+        repaint();
+    }
+
     // Method to allow painting on game panel
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
 
-        g.fillRect(100 + xDelta, 100 + yDelta, 200, 50);
+        g.fillRect(xDelta, yDelta, 200, 50);
     }
 }
