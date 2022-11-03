@@ -10,8 +10,13 @@ import java.awt.*;
 public class GamePanel extends JPanel {
 
     // Variables that increase or decrease rectangle position depending on user input
-    private int xDelta = 100;
-    private int yDelta = 100;
+    private float xDelta = 100;
+    private float yDelta = 100;
+    private float xDir = 0.003f;
+    private float yDir = 0.003f;
+
+    private int frames = 0;
+    private long lastCheck = 0;
 
     // Constructor where input is taken care of
     public GamePanel() {
@@ -26,14 +31,12 @@ public class GamePanel extends JPanel {
     public void changeXDelta(int value) {
 
         this.xDelta += value;
-        repaint();
     }
 
     // Method to change value of yDelta based on user input
     public void changeYDelta(int value) {
 
         this.yDelta += value;
-        repaint();
     }
 
     // Method to draw rectangle at a given position
@@ -41,7 +44,6 @@ public class GamePanel extends JPanel {
 
         this.xDelta = x;
         this.yDelta = y;
-        repaint();
     }
 
     // Method to allow painting on game panel
@@ -49,6 +51,31 @@ public class GamePanel extends JPanel {
 
         super.paintComponent(g);
 
-        g.fillRect(xDelta, yDelta, 200, 50);
+        updateRectangle();
+        g.fillRect((int)xDelta, (int)yDelta, 200, 50);
+
+        // Create FPS counter in console
+        frames++;
+        if(System.currentTimeMillis() - lastCheck >= 1000) {
+            lastCheck = System.currentTimeMillis();
+            System.out.println("FPS: " + frames);
+            frames = 0;
+        }
+
+        repaint();
+    }
+
+    // Method to update rectangle position and make it move inside boundaries of game window
+    private void updateRectangle() {
+
+        xDelta += xDir;
+        if(xDelta > 400 || xDelta < 0) {
+            xDir *= -1;
+        }
+
+        yDelta += yDir;
+        if(yDelta > 400 || yDelta < 0) {
+            yDir *= -1;
+        }
     }
 }
