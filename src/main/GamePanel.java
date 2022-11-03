@@ -1,6 +1,7 @@
 package main;
 
 import input.KeyboardInput;
+import input.MouseInput;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,7 +12,10 @@ public class GamePanel extends JPanel {
     // Constructor where input is taken care of
     public GamePanel() {
 
+        MouseInput mouseInput = new MouseInput();
         addKeyListener(new KeyboardInput());
+        addMouseListener(mouseInput);
+        addMouseMotionListener(mouseInput);
     }
 
     // Method to allow painting on game panel

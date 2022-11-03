@@ -14,7 +14,22 @@ public class KeyboardInput implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
 
-        System.out.println("A key is pressed!");
+        // Switch statement to detect if W, A, S or D are pressed
+        switch(e.getKeyCode()) {
+
+            case KeyEvent.VK_W:
+                System.out.println("Pressed W");
+                break;
+            case KeyEvent.VK_A:
+                System.out.println("Pressed A");
+                break;
+            case KeyEvent.VK_S:
+                System.out.println("Pressed S");
+                break;
+            case KeyEvent.VK_D:
+                System.out.println("Pressed D");
+                break;
+        }
     }
 
     @Override
