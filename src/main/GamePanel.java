@@ -2,6 +2,7 @@ package main;
 
 import input.KeyboardInput;
 import input.MouseInput;
+import utilities.Constants;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -9,6 +10,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+
+import static utilities.Constants.PlayerConstants.*;
 
 // Game panel class allows drawing and painting inside game frame
 public class GamePanel extends JPanel {
@@ -23,10 +26,13 @@ public class GamePanel extends JPanel {
 
     // Variables to store images
     private BufferedImage img;
-    private BufferedImage[] idleAnim;
+    private BufferedImage[][] animations;
 
     // Variables to store animation properties
     private int animTick, animIndex, animSpeed = 15;
+
+    // Variable to store player actions
+    private int playerAction = IDLE;
 
     // Constructor where input is taken care of
     public GamePanel() {
@@ -45,10 +51,12 @@ public class GamePanel extends JPanel {
     // Method to load and display sprite animations by creating array to store sub images then using a for loop
     private void loadAnimations() {
 
-        idleAnim = new BufferedImage[5];
+        animations = new BufferedImage[9][6];
 
-        for(int i = 0; i < idleAnim.length; i++) {
-            idleAnim[i] = img.getSubimage(i*64, 0, 64, 40);
+        for(int i = 0; i < animations.length; i++) {
+            for(int j = 0; j < animations[i].length; j++) {
+                animations[i][j] = img.getSubimage(j*64, i*40, 64, 40);
+            }
         }
     }
 
@@ -111,7 +119,7 @@ public class GamePanel extends JPanel {
             animTick = 0;
             animIndex++;
 
-            if(animIndex >= idleAnim.length) {
+            if(animIndex >= getSpriteAmount(playerAction)) {
 
                 animIndex = 0;
             }
@@ -125,6 +133,6 @@ public class GamePanel extends JPanel {
 
         updateAnimTick();
 
-        g.drawImage(idleAnim[animIndex], (int)xDelta, (int)yDelta, 128, 80, null);
+        g.drawImage(animations[playerAction][animIndex], (int)xDelta, (int)yDelta, 128, 80, null);
     }
 }
