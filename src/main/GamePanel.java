@@ -23,7 +23,10 @@ public class GamePanel extends JPanel {
 
     // Variables to store images
     private BufferedImage img;
-    private BufferedImage subImg;
+    private BufferedImage[] idleAnim;
+
+    // Variables to store animation properties
+    private int animTick, animIndex, animSpeed = 15;
 
     // Constructor where input is taken care of
     public GamePanel() {
@@ -31,6 +34,7 @@ public class GamePanel extends JPanel {
         MouseInput mouseInput = new MouseInput(this);
 
         importImg();
+        loadAnimations();
 
         setPanelSize();
         addKeyListener(new KeyboardInput(this));
@@ -38,7 +42,19 @@ public class GamePanel extends JPanel {
         addMouseMotionListener(mouseInput);
     }
 
+    // Method to load and display sprite animations by creating array to store sub images then using a for loop
+    private void loadAnimations() {
+
+        idleAnim = new BufferedImage[5];
+
+        for(int i = 0; i < idleAnim.length; i++) {
+            idleAnim[i] = img.getSubimage(i*64, 0, 64, 40);
+        }
+    }
+
     // Method to import image from resources folder into game
+    // Use try catch block to read image input stream
+    // Use another try catch block to close the input stream to avoid errors
     private void importImg() {
 
         InputStream is = getClass().getResourceAsStream("/player_sprites.png");
@@ -48,6 +64,14 @@ public class GamePanel extends JPanel {
         }
         catch (IOException e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                is.close();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -77,12 +101,30 @@ public class GamePanel extends JPanel {
         this.yDelta = y;
     }
 
+    // Method to implement animation by cycling through idle animation array at a given speed
+    public void updateAnimTick() {
+
+        animTick++;
+
+        if(animTick >= animSpeed) {
+
+            animTick = 0;
+            animIndex++;
+
+            if(animIndex >= idleAnim.length) {
+
+                animIndex = 0;
+            }
+        }
+    }
+
     // Method to allow painting on game panel
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
 
-        subImg = img.getSubimage(2*64, 2*40, 64, 40);
-        g.drawImage(subImg, (int)xDelta, (int)yDelta, 128, 80, null);
+        updateAnimTick();
+
+        g.drawImage(idleAnim[animIndex], (int)xDelta, (int)yDelta, 128, 80, null);
     }
 }
