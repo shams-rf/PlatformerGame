@@ -51,6 +51,6 @@ public class MouseInput implements MouseListener, MouseMotionListener {
     public void mouseMoved(MouseEvent e) {
 
         // Call method from game panel to draw rectangle at given x & y mouse positions
-        //gamePanel.setRectPos(e.getX(), e.getY());
+        gamePanel.setRectPos(e.getX(), e.getY());
     }
 }
