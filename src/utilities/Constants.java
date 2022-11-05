@@ -2,6 +2,16 @@ package utilities;
 
 public class Constants {
 
+    // Class that stores directions and gives them a corresponding integer
+    public static class Directions {
+
+        public static final int LEFT = 0;
+        public static final int UP = 1;
+        public static final int RIGHT = 2;
+        public static final int DOWN = 3;
+    }
+
+    // Class that stores player actions and gives them a corresponding integer
     public static class PlayerConstants {
 
         public static final int IDLE = 0;

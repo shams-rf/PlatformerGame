@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static utilities.Constants.PlayerConstants.*;
+import static utilities.Constants.Directions.*;
 
 // Game panel class allows drawing and painting inside game frame
 public class GamePanel extends JPanel {
@@ -31,8 +32,10 @@ public class GamePanel extends JPanel {
     // Variables to store animation properties
     private int animTick, animIndex, animSpeed = 15;
 
-    // Variable to store player actions
+    // Variables to store player actions & directions
     private int playerAction = IDLE;
+    private int playerDir = -1;
+    private boolean moving = false;
 
     // Constructor where input is taken care of
     public GamePanel() {
@@ -90,23 +93,17 @@ public class GamePanel extends JPanel {
         setPreferredSize(size);
     }
 
-    // Method to change value of xDelta based on user input
-    public void changeXDelta(int value) {
+    // Method to set player direction based on keyboard input
+    public void setDirection(int direction) {
 
-        this.xDelta += value;
+        this.playerDir = direction;
+        moving = true;
     }
 
-    // Method to change value of yDelta based on user input
-    public void changeYDelta(int value) {
+    // Method to set player state as moving or not moving
+    public void setMoving(boolean moving) {
 
-        this.yDelta += value;
-    }
-
-    // Method to draw rectangle at a given position
-    public void setRectPos(int x, int y) {
-
-        this.xDelta = x;
-        this.yDelta = y;
+        this.moving = moving;
     }
 
     // Method to implement animation by cycling through idle animation array at a given speed
@@ -126,12 +123,53 @@ public class GamePanel extends JPanel {
         }
     }
 
+    // Method to determine what type of animation to display
+    // If player is moving, set animation to running, else set animation to idle
+    private void setAnimation() {
+
+        if(moving) {
+
+            playerAction = RUNNING;
+        }
+        else {
+
+            playerAction = IDLE;
+        }
+    }
+
+    // Method to move player sprite by changing xDelta & yDelta values depending on direction
+    private void updatePos() {
+
+        if(moving) {
+
+            switch (playerDir) {
+
+                case LEFT:
+                    xDelta-=5;
+                    break;
+                case UP:
+                    yDelta-=5;
+                    break;
+                case RIGHT:
+                    xDelta+=5;
+                    break;
+                case DOWN:
+                    yDelta+=5;
+                    break;
+            }
+        }
+    }
+
     // Method to allow painting on game panel
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
 
         updateAnimTick();
+
+        setAnimation();
+
+        updatePos();
 
         g.drawImage(animations[playerAction][animIndex], (int)xDelta, (int)yDelta, 128, 80, null);
     }
