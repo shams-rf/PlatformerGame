@@ -160,16 +160,18 @@ public class GamePanel extends JPanel {
         }
     }
 
+    // Method to implement logic for game and update animations
+    public void updateGame() {
+
+        updateAnimTick();
+        setAnimation();
+        updatePos();
+    }
+
     // Method to allow painting on game panel
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
-
-        updateAnimTick();
-
-        setAnimation();
-
-        updatePos();
 
         g.drawImage(animations[playerAction][animIndex], (int)xDelta, (int)yDelta, 128, 80, null);
     }
