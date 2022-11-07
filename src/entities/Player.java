@@ -20,7 +20,7 @@ public class Player extends Entity{
 
     // Variables to store player actions & directions
     private int playerAction = IDLE;
-    private boolean moving = false;
+    private boolean moving = false, attacking = false;
     private boolean left, up, right, down;
     private float playerSpeed = 2.0f;
 
@@ -56,6 +56,7 @@ public class Player extends Entity{
             if(animIndex >= getSpriteAmount(playerAction)) {
 
                 animIndex = 0;
+                attacking = false;
             }
         }
     }
@@ -63,6 +64,8 @@ public class Player extends Entity{
     // Method to determine what type of animation to display
     // If player is moving, set animation to running, else set animation to idle
     private void setAnimation() {
+
+        int startAnim = playerAction;
 
         if(moving) {
 
@@ -72,6 +75,25 @@ public class Player extends Entity{
 
             playerAction = IDLE;
         }
+
+        if(attacking) {
+
+            playerAction = ATTACK_1;
+        }
+
+        // If animation isn't equal to the current player action (a new animation has been called)
+        // Reset the animation tick & animation index to display the full animation
+        if(startAnim != playerAction) {
+
+            resetAnimTick();
+        }
+    }
+
+    // Method to reset animation tick & index
+    private void resetAnimTick() {
+
+        animIndex = 0;
+        animTick = 0;
     }
 
     // Method to move player sprite by changing x & y values depending on direction
@@ -134,6 +156,19 @@ public class Player extends Entity{
                 e.printStackTrace();
             }
         }
+    }
+
+    // Method to reset booleans that store player directions
+    public void resetDirBooleans() {
+
+        left = false;
+        up = false;
+        right = false;
+        down = false;
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.attacking = attacking;
     }
 
     public boolean isLeft() {

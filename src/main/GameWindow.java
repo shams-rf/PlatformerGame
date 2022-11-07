@@ -1,6 +1,8 @@
 package main;
 
 import javax.swing.*;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 
 public class GameWindow {
 
@@ -17,5 +19,18 @@ public class GameWindow {
         jframe.setResizable(false); // Don't allow user to resize window
         jframe.pack();  // Create window that fits dimensions of game panel
         jframe.setVisible(true);    // Set visible property to true
+        // Stop player from moving when window focus is lost
+        jframe.addWindowFocusListener(new WindowFocusListener() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+
+            }
+
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+
+                gamePanel.getGame().windowFocusLost();
+            }
+        });
     }
 }

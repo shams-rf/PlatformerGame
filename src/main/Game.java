@@ -100,6 +100,12 @@ public class Game implements Runnable {
         }
     }
 
+    // Method to reset booleans that store player directions in player class
+    public void windowFocusLost() {
+
+        player.resetDirBooleans();
+    }
+
     public Player getPlayer() {
         return player;
     }
