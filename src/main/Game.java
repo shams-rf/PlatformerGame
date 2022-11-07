@@ -1,5 +1,9 @@
 package main;
 
+import entities.Player;
+
+import java.awt.*;
+
 public class Game implements Runnable {
 
     private GameWindow gameWindow;
@@ -10,13 +14,22 @@ public class Game implements Runnable {
     private final int FPS_SET = 120;
     private final int UPS_SET = 200;
 
+    // Variable to store player
+    private Player player;
+
     // Constructor to begin game by creating new GameWindow and GamePanel objects
     // Start the game loop
     public Game() {
-        gamePanel = new GamePanel();
+        initClasses();  // Initialise player, enemy classes, etc.
+        gamePanel = new GamePanel(this);
         gameWindow = new GameWindow(gamePanel);
         gamePanel.requestFocus();   // Request input focus for game panel
         startGameLoop();
+    }
+
+    private void initClasses() {
+
+        player = new Player(200, 200);
     }
 
     // Method to initialise game loop thread
@@ -28,7 +41,12 @@ public class Game implements Runnable {
 
     public void update() {
 
-        gamePanel.updateGame();
+        player.update();
+    }
+
+    public void render(Graphics g) {
+
+        player.render(g);
     }
 
     @Override
@@ -80,5 +98,9 @@ public class Game implements Runnable {
                 updates = 0;
             }
         }
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 }
