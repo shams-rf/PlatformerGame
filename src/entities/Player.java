@@ -1,5 +1,7 @@
 package entities;
 
+import utilities.LoadSave;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -129,31 +131,14 @@ public class Player extends Entity{
     // Method to load and display sprite animations by creating array to store sub images then using a for loop
     private void loadAnimations() {
 
-        // Method to import image from resources folder into game
-        // Use try catch block to read image input stream
-        // Use another try catch block to close the input stream to avoid errors
-        InputStream is = getClass().getResourceAsStream("/player_sprites.png");
+        // Load player sprite image
+        BufferedImage img = LoadSave.getSpriteAtlas(LoadSave.PLAYER_ATLAS);
 
-        try {
-            BufferedImage img = ImageIO.read(is);
+        animations = new BufferedImage[9][6];
 
-            animations = new BufferedImage[9][6];
-
-            for(int i = 0; i < animations.length; i++) {
-                for(int j = 0; j < animations[i].length; j++) {
-                    animations[i][j] = img.getSubimage(j*64, i*40, 64, 40);
-                }
-            }
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        finally {
-            try {
-                is.close();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
+        for(int i = 0; i < animations.length; i++) {
+            for(int j = 0; j < animations[i].length; j++) {
+                animations[i][j] = img.getSubimage(j*64, i*40, 64, 40);
             }
         }
     }
