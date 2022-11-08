@@ -1,6 +1,7 @@
 package main;
 
 import entities.Player;
+import levels.LevelManager;
 
 import java.awt.*;
 
@@ -14,8 +15,9 @@ public class Game implements Runnable {
     private final int FPS_SET = 120;
     private final int UPS_SET = 200;
 
-    // Variable to store player
+    // Variables to store sprites
     private Player player;
+    private LevelManager levelManager;
 
     // Variables to store sizes for game
     public final static int TILES_DEFAULT_SIZE = 32;
@@ -36,9 +38,11 @@ public class Game implements Runnable {
         startGameLoop();
     }
 
+    // Method to initialise sprites classes
     private void initClasses() {
 
         player = new Player(200, 200);
+        levelManager = new LevelManager(this);
     }
 
     // Method to initialise game loop thread
@@ -51,11 +55,13 @@ public class Game implements Runnable {
     public void update() {
 
         player.update();
+        levelManager.update();
     }
 
     public void render(Graphics g) {
 
         player.render(g);
+        levelManager.draw(g);
     }
 
     @Override
