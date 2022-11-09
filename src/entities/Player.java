@@ -94,6 +94,18 @@ public class Player extends Entity{
             playerAction = IDLE;
         }
 
+        if(inAir) {
+
+            if(airSpeed < 0) {
+
+                playerAction = JUMP;
+            }
+            else {
+
+                playerAction = FALLING;
+            }
+        }
+
         if(attacking) {
 
             playerAction = ATTACK_1;
