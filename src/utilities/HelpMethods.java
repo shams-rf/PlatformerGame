@@ -7,7 +7,7 @@ public class HelpMethods {
 
     // Method that takes a position as argument then checks if that position overlaps any tiles
     // Returns true if position doesn't overlap tiles, else return false
-    public static boolean canMoveHere(float x, float y, int width, int height, int[][] levelData) {
+    public static boolean canMoveHere(float x, float y, float width, float height, int[][] levelData) {
 
         if(!isSolid(x, y, levelData)) {
 

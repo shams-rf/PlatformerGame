@@ -1,6 +1,7 @@
 package entities;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 // Abstract class that stores details that are common between player & enemies
 public abstract class Entity {
@@ -8,14 +9,13 @@ public abstract class Entity {
     // Only classes that extend this Entity class can use these variables
     protected float x, y;
     protected int width, height;
-    protected Rectangle hitbox;
+    protected Rectangle2D.Float hitbox;
 
     public Entity(float x, float y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        initHitbox();
     }
 
     // Method to draw the hitbox
@@ -23,24 +23,24 @@ public abstract class Entity {
 
         // For debugging purposes
         g.setColor(Color.PINK);
-        g.drawRect(hitbox.x, hitbox.y, hitbox.width, hitbox.height);
+        g.drawRect((int) hitbox.x, (int) hitbox.y, (int) hitbox.width, (int) hitbox.height);
     }
 
     // Method to initialise & create sprite hitbox
-    private void initHitbox() {
+    protected void initHitbox(float x, float y, float width, float height) {
 
-        hitbox = new Rectangle((int) x, (int) y, width, height);
+        hitbox = new Rectangle2D.Float(x, y, width, height);
     }
 
     // Method that takes new x, y values & updates the hitbox
     // Use protected keyword so only player or enemy entity can update hitbox as they extend the entity class
-    protected void updateHitbox() {
+//    protected void updateHitbox() {
+//
+//        hitbox.x = (int) x;
+//        hitbox.y = (int) y;
+//    }
 
-        hitbox.x = (int) x;
-        hitbox.y = (int) y;
-    }
-
-    public Rectangle getHitbox() {
+    public Rectangle2D.Float getHitbox() {
         return hitbox;
     }
 }

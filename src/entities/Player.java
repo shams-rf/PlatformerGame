@@ -1,5 +1,6 @@
 package entities;
 
+import main.Game;
 import utilities.LoadSave;
 
 import javax.imageio.ImageIO;
@@ -28,16 +29,20 @@ public class Player extends Entity{
     private float playerSpeed = 2.0f;
     private int[][] levelData;  // Store level data in Player class to allow collision detection
 
+    // Offset for accurate player hitbox compared to original hitbox
+    private float xDrawOffset = 21 * Game.SCALE;
+    private float yDrawOffset = 4 * Game.SCALE;
+
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
+        initHitbox(x, y, 20 * Game.SCALE, 28 * Game.SCALE);
     }
 
     // Method to implement logic for game and update animations
     public void update() {
 
         updatePos();
-        updateHitbox();
         updateAnimTick();
         setAnimation();
     }
@@ -45,7 +50,7 @@ public class Player extends Entity{
     // Method to render & draw player
     public void render(Graphics g) {
 
-        g.drawImage(animations[playerAction][animIndex], (int)x, (int)y, width, height, null);
+        g.drawImage(animations[playerAction][animIndex], (int)(hitbox.x - xDrawOffset), (int)(hitbox.y - yDrawOffset), width, height, null);
         drawHitbox(g);  // Draw hitbox on top of player
     }
 
@@ -134,10 +139,10 @@ public class Player extends Entity{
             ySpeed = playerSpeed;
         }
 
-        if(canMoveHere(x + xSpeed, y + ySpeed, width, height, levelData)) {
+        if(canMoveHere(hitbox.x + xSpeed, hitbox.y + ySpeed, hitbox.width, hitbox.height, levelData)) {
 
-            this.x += xSpeed;
-            this.y += ySpeed;
+            hitbox.x += xSpeed;
+            hitbox.y += ySpeed;
             moving = true;
         }
     }
