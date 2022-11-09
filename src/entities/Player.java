@@ -11,6 +11,7 @@ import java.io.InputStream;
 import static utilities.Constants.Directions.*;
 import static utilities.Constants.Directions.DOWN;
 import static utilities.Constants.PlayerConstants.*;
+import static utilities.HelpMethods.canMoveHere;
 
 // Player class that extends the entity class and inherits its properties
 public class Player extends Entity{
@@ -25,6 +26,7 @@ public class Player extends Entity{
     private boolean moving = false, attacking = false;
     private boolean left, up, right, down;
     private float playerSpeed = 2.0f;
+    private int[][] levelData;  // Store level data in Player class to allow collision detection
 
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
@@ -107,25 +109,35 @@ public class Player extends Entity{
 
         moving = false;
 
+        if(!left && !up && !right && !down) {
+
+            return;
+        }
+
+        float xSpeed = 0, ySpeed = 0;
+
         if(left && !right) {
 
-            x-=playerSpeed;
-            moving = true;
+            xSpeed = -playerSpeed;
         }
         else if(right && !left) {
 
-            x+=playerSpeed;
-            moving = true;
+            xSpeed = playerSpeed;
         }
 
         if(up && !down) {
 
-            y-=playerSpeed;
-            moving = true;
+            ySpeed = -playerSpeed;
         }
         else if(down && !up) {
 
-            y+=playerSpeed;
+            ySpeed = playerSpeed;
+        }
+
+        if(canMoveHere(x + xSpeed, y + ySpeed, width, height, levelData)) {
+
+            this.x += xSpeed;
+            this.y += ySpeed;
             moving = true;
         }
     }
@@ -143,6 +155,12 @@ public class Player extends Entity{
                 animations[i][j] = img.getSubimage(j*64, i*40, 64, 40);
             }
         }
+    }
+
+    // Method to load level data to allow collision detection
+    public void loadLevelData(int[][] levelData) {
+
+        this.levelData = levelData;
     }
 
     // Method to reset booleans that store player directions

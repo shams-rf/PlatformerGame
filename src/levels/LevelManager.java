@@ -50,4 +50,10 @@ public class LevelManager {
 
 
     }
+
+    // Method to return the current game level
+    public Level getCurrentLevel() {
+
+        return levelOne;
+    }
 }
