@@ -26,8 +26,8 @@ public class Player extends Entity{
     private boolean left, up, right, down;
     private float playerSpeed = 2.0f;
 
-    public Player(float x, float y) {
-        super(x, y);
+    public Player(float x, float y, int width, int height) {
+        super(x, y, width, height);
         loadAnimations();
     }
 
@@ -35,6 +35,7 @@ public class Player extends Entity{
     public void update() {
 
         updatePos();
+        updateHitbox();
         updateAnimTick();
         setAnimation();
     }
@@ -42,7 +43,8 @@ public class Player extends Entity{
     // Method to render & draw player
     public void render(Graphics g) {
 
-        g.drawImage(animations[playerAction][animIndex], (int)x, (int)y, 128, 80, null);
+        g.drawImage(animations[playerAction][animIndex], (int)x, (int)y, width, height, null);
+        drawHitbox(g);  // Draw hitbox on top of player
     }
 
     // Method to implement animation by cycling through idle animation array at a given speed
