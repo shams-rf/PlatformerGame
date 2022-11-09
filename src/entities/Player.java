@@ -43,7 +43,7 @@ public class Player extends Entity{
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
-        initHitbox(x, y, 20 * Game.SCALE, 28 * Game.SCALE);
+        initHitbox(x, y, 20 * Game.SCALE, 27 * Game.SCALE);
     }
 
     // Method to implement logic for game and update animations
@@ -58,7 +58,6 @@ public class Player extends Entity{
     public void render(Graphics g) {
 
         g.drawImage(animations[playerAction][animIndex], (int)(hitbox.x - xDrawOffset), (int)(hitbox.y - yDrawOffset), width, height, null);
-        drawHitbox(g);  // Draw hitbox on top of player
     }
 
     // Method to implement animation by cycling through idle animation array at a given speed
@@ -250,6 +249,11 @@ public class Player extends Entity{
     public void loadLevelData(int[][] levelData) {
 
         this.levelData = levelData;
+
+        if(!isEntityOnFloor(hitbox, levelData)) {
+
+            inAir = true;
+        }
     }
 
     // Method to reset booleans that store player directions
