@@ -57,6 +57,7 @@ public class HelpMethods {
     public static float getEntityXPosNextToWall(Rectangle2D.Float hitbox, float xSpeed) {
 
         int currentTile = (int)(hitbox.x / Game.TILES_SIZE);
+
         if(xSpeed > 0) {
 
             int tileXPos = currentTile * Game.TILES_SIZE;
@@ -67,5 +68,39 @@ public class HelpMethods {
 
             return currentTile * Game.TILES_SIZE;
         }
+    }
+
+    // Method that allows entity to move right next to a roof or right above the floor in the gaem
+    public static float getEntityYPosUnderRoofOrAboveFloor(Rectangle2D.Float hitbox, float airSpeed) {
+
+        int currentTile = (int)(hitbox.y / Game.TILES_SIZE);
+
+        if(airSpeed > 0) {
+
+            // Falling - Touching Floor
+            int tileYPos = currentTile * Game.TILES_SIZE;
+            int yOffset = (int)(Game.TILES_SIZE - hitbox.height);
+            return tileYPos + yOffset - 1;
+        }
+        else {
+
+            // Jumping
+            return currentTile * Game.TILES_SIZE;
+        }
+    }
+
+    // Method to check if bottom left & bottom right corners of entity hitbox are touching the floor
+    // If both corners aren't touching the floor, entity is in air & method returns false, else method returns true
+    public static boolean isEntityOnFloor(Rectangle2D.Float hitbox, int[][] levelData) {
+
+        if(!isSolid(hitbox.x, hitbox.y + hitbox.height + 1, levelData)) {
+
+            if(!isSolid(hitbox.x + hitbox.width, hitbox.y + hitbox.height + 1, levelData)) {
+
+                return false;
+            }
+        }
+
+        return true;
     }
 }

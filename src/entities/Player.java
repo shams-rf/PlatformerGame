@@ -120,6 +120,11 @@ public class Player extends Entity{
     private void updatePos() {
 
         moving = false;
+        
+        if(jump) {
+            
+            jump();
+        }
 
         if(!left && !right && !inAir) {
 
@@ -137,21 +142,69 @@ public class Player extends Entity{
             xSpeed += playerSpeed;
         }
 
+        // Check if entity is on floor or not
+        // If not on floor, then display falling animation until entity is on floor again
+        // This is to prevent entity from floating or running on empty air
+        if(!inAir) {
+
+            if(!isEntityOnFloor(hitbox, levelData)) {
+
+                inAir = true;
+            }
+        }
+
         if(inAir) {
 
+            if(canMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, levelData)) {
 
+                hitbox.y += airSpeed;
+                airSpeed += gravity;
+                updateXPos(xSpeed);
+            }
+            else {
+
+                hitbox.y = getEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
+
+                if(airSpeed > 0) {
+                    
+                    resetInAir();
+                }
+                else {
+
+                    airSpeed = fallSpeedAfterCollision;
+                }
+                updateXPos(xSpeed);
+            }
         }
         else {
 
             updateXPos(xSpeed);
         }
 
-//        if(canMoveHere(hitbox.x + xSpeed, hitbox.y + ySpeed, hitbox.width, hitbox.height, levelData)) {
-//
-//            hitbox.x += xSpeed;
-//            hitbox.y += ySpeed;
-//            moving = true;
-//        }
+        moving = true;
+    }
+
+    // Method that allows entity to jump
+    // If already in air, return
+    // If not, then display initial jump animation
+    private void jump() {
+
+        if(inAir) {
+
+            return;
+        }
+        else {
+
+            inAir = true;
+            airSpeed = jumpSpeed;
+        }
+    }
+
+    // Method that resets variables inAir & airSpeed once entity hits the ground after falling
+    private void resetInAir() {
+
+        inAir = false;
+        airSpeed = 0;
     }
 
     private void updateXPos(float xSpeed) {
@@ -230,5 +283,9 @@ public class Player extends Entity{
 
     public void setDown(boolean down) {
         this.down = down;
+    }
+
+    public void setJump(boolean jump) {
+        this.jump = jump;
     }
 }
