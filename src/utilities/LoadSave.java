@@ -41,6 +41,7 @@ public class LoadSave {
         return img;
     }
 
+    // Method to allow level editing
     public static int[][] getLevelData() {
 
         int[][] levelData = new int[Game.TILES_IN_HEIGHT][Game.TILES_IN_WIDTH];

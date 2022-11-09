@@ -6,6 +6,7 @@ import utilities.LoadSave;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+// Class that manages & displays different levels
 public class LevelManager {
 
     private Game game;
