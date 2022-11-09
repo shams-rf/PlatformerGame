@@ -43,7 +43,7 @@ public class Player extends Entity{
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
-        initHitbox(x, y, 20 * Game.SCALE, 27 * Game.SCALE);
+        initHitbox(x, y, 20 * Game.SCALE, 28 * Game.SCALE);
     }
 
     // Method to implement logic for game and update animations
