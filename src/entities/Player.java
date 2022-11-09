@@ -12,7 +12,7 @@ import java.io.InputStream;
 import static utilities.Constants.Directions.*;
 import static utilities.Constants.Directions.DOWN;
 import static utilities.Constants.PlayerConstants.*;
-import static utilities.HelpMethods.canMoveHere;
+import static utilities.HelpMethods.*;
 
 // Player class that extends the entity class and inherits its properties
 public class Player extends Entity{
@@ -25,13 +25,20 @@ public class Player extends Entity{
     // Variables to store player actions & directions
     private int playerAction = IDLE;
     private boolean moving = false, attacking = false;
-    private boolean left, up, right, down;
+    private boolean left, up, right, down, jump;
     private float playerSpeed = 2.0f;
     private int[][] levelData;  // Store level data in Player class to allow collision detection
 
     // Offset for accurate player hitbox compared to original hitbox
     private float xDrawOffset = 21 * Game.SCALE;
     private float yDrawOffset = 4 * Game.SCALE;
+
+    // Variables for jumping / gravity
+    private float airSpeed = 0f;    // Variable for speed at which sprite travels through the air
+    private float gravity = 0.04f * Game.SCALE; // Constant for game gravity. The lower the value, the higher the jump
+    private float jumpSpeed = -2.25f * Game.SCALE;  // Value applied to airSpeed when jump button is clicked
+    private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
+    private boolean inAir = false;
 
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
@@ -114,36 +121,48 @@ public class Player extends Entity{
 
         moving = false;
 
-        if(!left && !up && !right && !down) {
+        if(!left && !right && !inAir) {
 
             return;
         }
 
-        float xSpeed = 0, ySpeed = 0;
+        float xSpeed = 0;
 
-        if(left && !right) {
+        if(left) {
 
-            xSpeed = -playerSpeed;
+            xSpeed -= playerSpeed;
         }
-        else if(right && !left) {
+        if(right) {
 
-            xSpeed = playerSpeed;
-        }
-
-        if(up && !down) {
-
-            ySpeed = -playerSpeed;
-        }
-        else if(down && !up) {
-
-            ySpeed = playerSpeed;
+            xSpeed += playerSpeed;
         }
 
-        if(canMoveHere(hitbox.x + xSpeed, hitbox.y + ySpeed, hitbox.width, hitbox.height, levelData)) {
+        if(inAir) {
+
+
+        }
+        else {
+
+            updateXPos(xSpeed);
+        }
+
+//        if(canMoveHere(hitbox.x + xSpeed, hitbox.y + ySpeed, hitbox.width, hitbox.height, levelData)) {
+//
+//            hitbox.x += xSpeed;
+//            hitbox.y += ySpeed;
+//            moving = true;
+//        }
+    }
+
+    private void updateXPos(float xSpeed) {
+
+        if(canMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, levelData)) {
 
             hitbox.x += xSpeed;
-            hitbox.y += ySpeed;
-            moving = true;
+        }
+        else {
+
+            hitbox.x = getEntityXPosNextToWall(hitbox, xSpeed);
         }
     }
 

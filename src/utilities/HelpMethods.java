@@ -2,6 +2,8 @@ package utilities;
 
 import main.Game;
 
+import java.awt.geom.Rectangle2D;
+
 // Class that stores static helper methods for use by any class in the program
 public class HelpMethods {
 
@@ -49,5 +51,21 @@ public class HelpMethods {
             return true;
         }
         return false;
+    }
+
+    // Method that allows entity to move next to a wall in the game without overlapping
+    public static float getEntityXPosNextToWall(Rectangle2D.Float hitbox, float xSpeed) {
+
+        int currentTile = (int)(hitbox.x / Game.TILES_SIZE);
+        if(xSpeed > 0) {
+
+            int tileXPos = currentTile * Game.TILES_SIZE;
+            int xOffset = (int)(Game.TILES_SIZE - hitbox.width);
+            return tileXPos + xOffset - 1;
+        }
+        else {
+
+            return currentTile * Game.TILES_SIZE;
+        }
     }
 }
