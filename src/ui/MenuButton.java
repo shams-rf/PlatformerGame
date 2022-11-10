@@ -81,6 +81,10 @@ public class MenuButton {
         this.mousePressed = mousePressed;
     }
 
+    public Rectangle getBounds() {
+        return bounds;
+    }
+
     // Method to change game state when an option is pressed from the menu
     public void applyGameState() {
 
