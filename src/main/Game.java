@@ -1,7 +1,8 @@
 package main;
 
-import entities.Player;
-import levels.LevelManager;
+import gamestates.Gamestate;
+import gamestates.Menu;
+import gamestates.Playing;
 
 import java.awt.*;
 
@@ -15,9 +16,8 @@ public class Game implements Runnable {
     private final int FPS_SET = 120;
     private final int UPS_SET = 200;
 
-    // Variables to store sprites
-    private Player player;
-    private LevelManager levelManager;
+    private Playing playing;
+    private Menu menu;
 
     // Variables to store sizes for game
     public final static int TILES_DEFAULT_SIZE = 32;
@@ -41,9 +41,8 @@ public class Game implements Runnable {
     // Method to initialise sprites classes
     private void initClasses() {
 
-        levelManager = new LevelManager(this);
-        player = new Player(200, 200, (int)(64 * SCALE), (int)(40 * SCALE));
-        player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
+        menu = new Menu(this);
+        playing = new Playing(this);
     }
 
     // Method to initialise game loop thread
@@ -53,16 +52,36 @@ public class Game implements Runnable {
         gameThread.start();
     }
 
+    // Method that updates game state based on what's currently selected
+    // If in menu, only menu state is updated. If playing, only playing state is updated
     public void update() {
 
-        player.update();
-        levelManager.update();
+        switch(Gamestate.state) {
+
+            case MENU:
+                menu.update();
+                break;
+            case PLAYING:
+                playing.update();
+                break;
+            default:
+                break;
+        }
     }
 
     public void render(Graphics g) {
 
-        levelManager.draw(g);
-        player.render(g);
+        switch(Gamestate.state) {
+
+            case MENU:
+                menu.draw(g);
+                break;
+            case PLAYING:
+                playing.draw(g);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -117,12 +136,21 @@ public class Game implements Runnable {
     }
 
     // Method to reset booleans that store player directions in player class
+    // Reset player directions when window loses focus
+    // Prevents player from moving infinitely if no keys are pressed
     public void windowFocusLost() {
 
-        player.resetDirBooleans();
+        if(Gamestate.state == Gamestate.PLAYING) {
+
+            playing.getPlayer().resetDirBooleans();
+        }
     }
 
-    public Player getPlayer() {
-        return player;
+    public Menu getMenu() {
+        return menu;
+    }
+
+    public Playing getPlaying() {
+        return playing;
     }
 }

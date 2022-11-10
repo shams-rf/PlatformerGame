@@ -1,5 +1,6 @@
 package input;
 
+import gamestates.Gamestate;
 import main.Game;
 import main.GamePanel;
 
@@ -19,17 +20,22 @@ public class MouseInput implements MouseListener, MouseMotionListener {
     @Override
     public void mouseClicked(MouseEvent e) {
 
-        System.out.println("Mouse clicked!");
+        switch(Gamestate.state) {
+
+            case MENU:
+                gamePanel.getGame().getMenu().mouseClicked(e);
+                break;
+            case PLAYING:
+                gamePanel.getGame().getPlaying().mouseClicked(e);
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
 
-        // If mouse button is pressed, display attacking animation
-        if(e.getButton() == MouseEvent.BUTTON1) {
-
-            gamePanel.getGame().getPlayer().setAttacking(true);
-        }
     }
 
     @Override
