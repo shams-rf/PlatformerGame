@@ -15,7 +15,7 @@ public class Playing extends State implements Statemethods {
     private Player player;
     private LevelManager levelManager;
     private PauseOverlay pauseOverlay;
-    private boolean paused = true; // Toggle to show paused screen
+    private boolean paused = false; // Toggle to show paused screen
 
     public Playing(Game game) {
         super(game);
@@ -28,16 +28,21 @@ public class Playing extends State implements Statemethods {
         levelManager = new LevelManager(game);
         player = new Player(200, 200, (int)(64 * Game.SCALE), (int)(40 * Game.SCALE));
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
-        pauseOverlay = new PauseOverlay();
+        pauseOverlay = new PauseOverlay(this);
     }
 
     @Override
     public void update() {
 
-        levelManager.update();
-        player.update();
+        if(!paused) {
 
-        pauseOverlay.update();
+            levelManager.update();
+            player.update();
+        }
+        else {
+
+            pauseOverlay.update();
+        }
     }
 
     @Override
@@ -46,7 +51,10 @@ public class Playing extends State implements Statemethods {
         levelManager.draw(g);
         player.render(g);
 
-        pauseOverlay.draw(g);
+        if(paused) {
+
+            pauseOverlay.draw(g);
+        }
     }
 
     @Override
@@ -96,8 +104,8 @@ public class Playing extends State implements Statemethods {
             case KeyEvent.VK_SPACE:
                 player.setJump(true);
                 break;
-            case KeyEvent.VK_BACK_SPACE:
-                Gamestate.state = Gamestate.MENU;
+            case KeyEvent.VK_ESCAPE:
+                paused = !paused;
                 break;
         }
     }
@@ -119,6 +127,12 @@ public class Playing extends State implements Statemethods {
                 player.setJump(false);
                 break;
         }
+    }
+
+    // Method to unpause game & hide pause menu
+    public void unpauseGame() {
+
+        paused = false;
     }
 
     // Method to reset booleans that store player directions in player class
