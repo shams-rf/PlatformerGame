@@ -11,6 +11,7 @@ import java.awt.image.BufferedImage;
 
 import static utilities.Constants.UI.PauseButtons.*;
 import static utilities.Constants.UI.UrmButtons.*;
+import static utilities.Constants.UI.VolumeButtons.*;
 
 // Class that stores properties & methods for the pause overlay in menu
 public class PauseOverlay {
@@ -20,6 +21,7 @@ public class PauseOverlay {
     private int bgX, bgY, bgW, bgH;
     private SoundButton musicButton, sfxButton;
     private UrmButton menuB, replayB, unpauseB;
+    private VolumeButton volumeButton;
 
     public PauseOverlay(Playing playing) {
 
@@ -28,6 +30,15 @@ public class PauseOverlay {
         loadBackground();
         createSoundButtons();
         createUrmButtons();
+        createVolumeButton();
+    }
+
+    // Load volumn button & slider in its correct position in pause menu
+    private void createVolumeButton() {
+
+        int vX = (int) (309 * Game.SCALE);
+        int vY = (int) (278 * Game.SCALE);
+        volumeButton = new VolumeButton(vX, vY, SLIDER_WIDTH, VOLUME_HEIGHT);
     }
 
     // Load each URM button in its correct position in pause menu
@@ -72,6 +83,8 @@ public class PauseOverlay {
         unpauseB.update();
         replayB.update();
         menuB.update();
+
+        volumeButton.update();
     }
 
     // Method to draw & display loaded background image & loaded sound buttons on game panel
@@ -88,6 +101,9 @@ public class PauseOverlay {
         unpauseB.draw(g);
         replayB.draw(g);
         menuB.draw(g);
+
+        // Volume slider
+        volumeButton.draw(g);
     }
 
     public void mouseDragged(MouseEvent e) {
