@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 import static utilities.Constants.UI.PauseButtons.*;
+import static utilities.Constants.UI.UrmButtons.*;
 
 // Class that stores properties & methods for the pause overlay in menu
 public class PauseOverlay {
@@ -15,11 +16,26 @@ public class PauseOverlay {
     private BufferedImage backgroundImg;
     private int bgX, bgY, bgW, bgH;
     private SoundButton musicButton, sfxButton;
+    private UrmButton menuB, replayB, unpauseB;
 
     public PauseOverlay() {
 
         loadBackground();
         createSoundButtons();
+        createUrmButtons();
+    }
+
+    // Load each URM button in its correct position in pause menu
+    private void createUrmButtons() {
+
+        int menuX = (int) (313 * Game.SCALE);
+        int replayX = (int) (387 * Game.SCALE);
+        int unpauseX = (int) (462 * Game.SCALE);
+        int bY = (int) (325 * Game.SCALE);
+
+        unpauseB = new UrmButton(unpauseX, bY, URM_SIZE, URM_SIZE, 0);
+        replayB = new UrmButton(replayX, bY, URM_SIZE, URM_SIZE, 1);
+        menuB = new UrmButton(menuX, bY, URM_SIZE, URM_SIZE, 2);
     }
 
     // Load each sound button in its correct position in pause menu
@@ -47,6 +63,10 @@ public class PauseOverlay {
 
         musicButton.update();
         sfxButton.update();
+
+        unpauseB.update();
+        replayB.update();
+        menuB.update();
     }
 
     // Method to draw & display loaded background image & loaded sound buttons on game panel
@@ -58,6 +78,11 @@ public class PauseOverlay {
         // Sound buttons
         musicButton.draw(g);
         sfxButton.draw(g);
+
+        // Urm buttons
+        unpauseB.draw(g);
+        replayB.draw(g);
+        menuB.draw(g);
     }
 
     public void mouseDragged(MouseEvent e) {
