@@ -4,6 +4,7 @@ import entities.Player;
 import levels.LevelManager;
 import main.Game;
 import ui.PauseOverlay;
+import utilities.LoadSave;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -16,6 +17,14 @@ public class Playing extends State implements Statemethods {
     private LevelManager levelManager;
     private PauseOverlay pauseOverlay;
     private boolean paused = false; // Toggle to show paused screen
+
+    // Variables to allow shifting of level once player passes border
+    private int xLevelOffset;   // Offset added or removed to draw level further to left or right
+    private int leftBorder = (int) (0.2 * Game.GAME_WIDTH);
+    private int rightBorder = (int) (0.8 * Game.GAME_WIDTH);
+    private int levelTilesWide = LoadSave.getLevelData()[0].length; // Store entire width of level
+    private int maxTilesOffset = levelTilesWide - Game.TILES_IN_WIDTH;  // (entire level width - visible tiles)
+    private int maxLevelOffsetX = maxTilesOffset * Game.TILES_SIZE;
 
     public Playing(Game game) {
         super(game);
@@ -38,6 +47,7 @@ public class Playing extends State implements Statemethods {
 
             levelManager.update();
             player.update();
+            checkCloseToBorder();
         }
         else {
 
@@ -45,11 +55,37 @@ public class Playing extends State implements Statemethods {
         }
     }
 
+    // Method that checks if player has passed any of the borders
+    // If yes, then shift level to the right or left appropriately
+    private void checkCloseToBorder() {
+
+        int playerX = (int) (player.getHitbox().x);
+        int diff = playerX - xLevelOffset;
+
+        if(diff > rightBorder) {
+
+            xLevelOffset += diff - rightBorder;
+        }
+        else if(diff < leftBorder) {
+
+            xLevelOffset += diff - leftBorder;
+        }
+
+        if(xLevelOffset > maxLevelOffsetX) {
+
+            xLevelOffset = maxLevelOffsetX;
+        }
+        else if(xLevelOffset < 0) {
+
+            xLevelOffset = 0;
+        }
+    }
+
     @Override
     public void draw(Graphics g) {
 
-        levelManager.draw(g);
-        player.render(g);
+        levelManager.draw(g, xLevelOffset);
+        player.render(g, xLevelOffset);
 
         if(paused) {
 

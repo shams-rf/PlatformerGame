@@ -32,7 +32,8 @@ public class HelpMethods {
     // Returns a boolean based on if the position is inside game window or not
     private static boolean isSolid(float x, float y, int[][] levelData) {
 
-        if(x < 0 || x >= Game.GAME_WIDTH) {
+        int maxWidth = levelData[0].length * Game.TILES_SIZE;
+        if(x < 0 || x >= maxWidth) {
 
             return true;
         }

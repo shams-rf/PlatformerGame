@@ -55,9 +55,9 @@ public class Player extends Entity{
     }
 
     // Method to render & draw player
-    public void render(Graphics g) {
+    public void render(Graphics g, int levelOffset) {
 
-        g.drawImage(animations[playerAction][animIndex], (int)(hitbox.x - xDrawOffset), (int)(hitbox.y - yDrawOffset), width, height, null);
+        g.drawImage(animations[playerAction][animIndex], (int)(hitbox.x - xDrawOffset) - levelOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
     }
 
     // Method to implement animation by cycling through idle animation array at a given speed
