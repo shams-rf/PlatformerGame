@@ -9,6 +9,9 @@ import utilities.LoadSave;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+
+import static utilities.Constants.Environment.*;
 
 public class Playing extends State implements Statemethods {
 
@@ -26,9 +29,15 @@ public class Playing extends State implements Statemethods {
     private int maxTilesOffset = levelTilesWide - Game.TILES_IN_WIDTH;  // (entire level width - visible tiles)
     private int maxLevelOffsetX = maxTilesOffset * Game.TILES_SIZE;
 
+    // Variables to store images for environment
+    private BufferedImage backgroundImg, bigCloud;
+
     public Playing(Game game) {
         super(game);
         initClasses();
+
+        backgroundImg = LoadSave.getSpriteAtlas(LoadSave.PLAYING_BG_IMG);
+        bigCloud = LoadSave.getSpriteAtlas(LoadSave.BIG_CLOUDS);
     }
 
     // Method to initialise sprites classes
@@ -84,6 +93,10 @@ public class Playing extends State implements Statemethods {
     @Override
     public void draw(Graphics g) {
 
+        g.drawImage(backgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+
+        drawClouds(g);
+
         levelManager.draw(g, xLevelOffset);
         player.render(g, xLevelOffset);
 
@@ -92,6 +105,15 @@ public class Playing extends State implements Statemethods {
             g.setColor(new Color(0, 0, 0, 150));
             g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
             pauseOverlay.draw(g);
+        }
+    }
+
+    // Method to draw clouds in background game environment
+    private void drawClouds(Graphics g) {
+
+        for(int i = 0; i < 3; i++) {
+
+            g.drawImage(bigCloud, 0 + i * BIG_CLOUD_WIDTH, (int) (204 * Game.SCALE), BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
         }
     }
 
