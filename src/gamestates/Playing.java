@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import static utilities.Constants.Environment.*;
 
@@ -30,7 +31,9 @@ public class Playing extends State implements Statemethods {
     private int maxLevelOffsetX = maxTilesOffset * Game.TILES_SIZE;
 
     // Variables to store images for environment
-    private BufferedImage backgroundImg, bigCloud;
+    private BufferedImage backgroundImg, bigCloud, smallCloud;
+    private int[] smallCloudsPos;
+    private Random rnd = new Random();
 
     public Playing(Game game) {
         super(game);
@@ -38,6 +41,12 @@ public class Playing extends State implements Statemethods {
 
         backgroundImg = LoadSave.getSpriteAtlas(LoadSave.PLAYING_BG_IMG);
         bigCloud = LoadSave.getSpriteAtlas(LoadSave.BIG_CLOUDS);
+        smallCloud = LoadSave.getSpriteAtlas(LoadSave.SMALL_CLOUDS);
+        smallCloudsPos = new int[8];
+        for(int i = 0; i < smallCloudsPos.length; i++) {
+
+            smallCloudsPos[i] = (int) (90 * Game.SCALE) + rnd.nextInt((int) (100 * Game.SCALE));
+        }
     }
 
     // Method to initialise sprites classes
@@ -113,7 +122,12 @@ public class Playing extends State implements Statemethods {
 
         for(int i = 0; i < 3; i++) {
 
-            g.drawImage(bigCloud, 0 + i * BIG_CLOUD_WIDTH, (int) (204 * Game.SCALE), BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
+            g.drawImage(bigCloud,i * BIG_CLOUD_WIDTH, (int) (204 * Game.SCALE), BIG_CLOUD_WIDTH, BIG_CLOUD_HEIGHT, null);
+        }
+
+        for(int i = 0; i < smallCloudsPos.length; i++) {
+
+            g.drawImage(smallCloud, SMALL_CLOUD_WIDTH * 4 * i, smallCloudsPos[i], SMALL_CLOUD_WIDTH, SMALL_CLOUD_HEIGHT, null);
         }
     }
 
