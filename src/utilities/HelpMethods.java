@@ -104,4 +104,10 @@ public class HelpMethods {
 
         return true;
     }
+
+    // Method that returns true if sprite is on the floor & not in the air
+    public static boolean isFloor(Rectangle2D.Float hitbox, float xSpeed, int[][] levelData) {
+
+        return isSolid(hitbox.x + xSpeed, hitbox.y + hitbox.height + 1, levelData);
+    }
 }
