@@ -31,6 +31,8 @@ public abstract class Enemy extends Entity {
         initHitbox(x, y, width, height);
     }
 
+    // Method called when an enemy is first added into the game
+    // Checks if enemy on floor. If not then sets inAir variable to true
     protected void firstUpdateCheck(int[][] levelData) {
 
         if(!isEntityOnFloor(hitbox, levelData)) {
@@ -41,6 +43,7 @@ public abstract class Enemy extends Entity {
         firstUpdate = false;
     }
 
+    // Method that allows enemy to fall from the air onto the ground
     protected void updateInAir(int[][] levelData) {
 
         if(canMoveHere(hitbox.x, hitbox.y + fallSpeed, hitbox.width, hitbox.height, levelData)) {
@@ -55,6 +58,7 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    // Method that implements enemy move and patrol action
     protected void move(int[][] levelData) {
 
         float xSpeed = 0;
