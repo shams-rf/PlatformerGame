@@ -27,26 +27,12 @@ public class Crabby extends Enemy {
 
         if(firstUpdate) {
 
-            if(!isEntityOnFloor(hitbox, levelData)) {
-
-                inAir = true;
-            }
-
-            firstUpdate = false;
+            firstUpdateCheck(levelData);
         }
 
         if(inAir) {
 
-            if(canMoveHere(hitbox.x, hitbox.y + fallSpeed, hitbox.width, hitbox.height, levelData)) {
-
-                hitbox.y += fallSpeed;
-                fallSpeed += gravity;
-            }
-            else {
-
-                inAir = false;
-                hitbox.y = getEntityYPosUnderRoofOrAboveFloor(hitbox, fallSpeed);
-            }
+            updateInAir(levelData);
         }
         else {
 
@@ -56,28 +42,7 @@ public class Crabby extends Enemy {
                     enemyState = RUNNING;
                     break;
                 case RUNNING:
-                    float xSpeed = 0;
-
-                    if(walkDir == LEFT) {
-
-                        xSpeed = -walkSpeed;
-                    }
-                    else {
-
-                        xSpeed = walkSpeed;
-                    }
-
-                    if(canMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, levelData)) {
-
-                        if(isFloor(hitbox, xSpeed, levelData)) {
-
-                            hitbox.x += xSpeed;
-                            return;
-                        }
-                    }
-
-                    changeWalkDir();
-
+                    move(levelData);
                     break;
             }
         }
