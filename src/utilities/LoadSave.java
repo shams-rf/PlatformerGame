@@ -1,5 +1,6 @@
 package utilities;
 
+import entities.Crabby;
 import main.Game;
 
 import javax.imageio.ImageIO;
@@ -7,6 +8,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+
+import static utilities.Constants.EnemyConstants.CRABBY;
 
 // Class that saves & loads different images and elements of the game such as player, level, etc.
 public class LoadSave {
@@ -50,6 +54,28 @@ public class LoadSave {
             }
         }
         return img;
+    }
+
+    // Method to add a crabby at a position in the game
+    // Nested for loop goes over level data. If a green colour from level data matches CRABBY value which is 0, add new crabby at that position
+    public static ArrayList<Crabby> getCrabs() {
+
+        BufferedImage img = getSpriteAtlas(LEVEL_ONE_DATA);
+        ArrayList<Crabby> list = new ArrayList<>();
+
+        for(int j = 0; j < img.getHeight(); j++) {
+
+            for(int i = 0; i < img.getWidth(); i++) {
+
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getGreen();
+                if(value == CRABBY) {
+
+                    list.add(new Crabby(i * Game.TILES_SIZE, j * Game.TILES_SIZE));
+                }
+            }
+        }
+        return list;
     }
 
     // Method to allow level editing
