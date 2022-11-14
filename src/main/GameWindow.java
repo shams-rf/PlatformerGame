@@ -15,9 +15,9 @@ public class GameWindow {
 
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  // Set window to terminate program on close
         jframe.add(gamePanel);  // Add game panel inside game frame
-        jframe.setLocationRelativeTo(null); // Spawn window in centre of screen
         jframe.setResizable(false); // Don't allow user to resize window
         jframe.pack();  // Create window that fits dimensions of game panel
+        jframe.setLocationRelativeTo(null); // Spawn window in centre of screen
         jframe.setVisible(true);    // Set visible property to true
         // Stop player from moving when window focus is lost
         jframe.addWindowFocusListener(new WindowFocusListener() {

@@ -19,11 +19,11 @@ public abstract class Entity {
     }
 
     // Method to draw the hitbox
-    protected void drawHitbox(Graphics g) {
+    protected void drawHitbox(Graphics g, int xLevelOffset) {
 
         // For debugging purposes
         g.setColor(Color.PINK);
-        g.drawRect((int) hitbox.x, (int) hitbox.y, (int) hitbox.width, (int) hitbox.height);
+        g.drawRect((int) hitbox.x - xLevelOffset, (int) hitbox.y, (int) hitbox.width, (int) hitbox.height);
     }
 
     // Method to initialise & create sprite hitbox

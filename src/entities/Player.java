@@ -58,6 +58,7 @@ public class Player extends Entity{
     public void render(Graphics g, int levelOffset) {
 
         g.drawImage(animations[playerAction][animIndex], (int)(hitbox.x - xDrawOffset) - levelOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
+//        drawHitbox(g, levelOffset);
     }
 
     // Method to implement animation by cycling through idle animation array at a given speed
