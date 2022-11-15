@@ -84,6 +84,15 @@ public abstract class Enemy extends Entity {
         changeWalkDir();
     }
 
+    // Method to change current enemy state with a specified state
+    // Reset animTick & animIndex to prevent animation starting from middle
+    protected void newState(int enemyState) {
+
+        this.enemyState = enemyState;
+        animTick = 0;
+        animIndex = 0;
+    }
+
     protected void updateAnimationTick() {
 
         animTick++;
