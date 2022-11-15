@@ -60,6 +60,10 @@ public class Player extends Entity{
 
     private Rectangle2D.Float attackBox;    // If enemy inside attack box when player attacks, enemy dies
 
+    // Variables to handle flipping player right or left
+    private int flipX = 0;
+    private int flipW = 1;
+
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
@@ -107,7 +111,10 @@ public class Player extends Entity{
     // Method to render & draw player
     public void render(Graphics g, int levelOffset) {
 
-        g.drawImage(animations[playerAction][animIndex], (int)(hitbox.x - xDrawOffset) - levelOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
+        g.drawImage(animations[playerAction][animIndex],
+                (int)(hitbox.x - xDrawOffset) - levelOffset + flipX,
+                (int)(hitbox.y - yDrawOffset),
+                width * flipW, height, null);
 
         drawAttackBox(g, levelOffset);
         drawUI(g);
@@ -203,11 +210,6 @@ public class Player extends Entity{
             jump();
         }
 
-//        if(!left && !right && !inAir) {
-//
-//            return;
-//        }
-
         if(!inAir) {
 
             if((!left && !right) || (left && right)) {
@@ -221,10 +223,14 @@ public class Player extends Entity{
         if(left) {
 
             xSpeed -= playerSpeed;
+            flipX = width;
+            flipW = -1;
         }
         if(right) {
 
             xSpeed += playerSpeed;
+            flipX = 0;
+            flipW = 1;
         }
 
         // Check if entity is on floor or not
