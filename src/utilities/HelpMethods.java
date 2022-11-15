@@ -124,6 +124,11 @@ public class HelpMethods {
 
                 return false;
             }
+
+            if(!isTileSolid(xStart + i, y + 1, levelData)) {
+
+                return false;
+            }
         }
 
         return true;
