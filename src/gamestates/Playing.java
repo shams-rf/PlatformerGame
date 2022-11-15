@@ -136,6 +136,11 @@ public class Playing extends State implements Statemethods {
         }
     }
 
+    // Method to reset player, enemies, level
+    public void resetAll() {
+
+    }
+
     public void mouseDragged(MouseEvent e) {
 
         if(paused) {
