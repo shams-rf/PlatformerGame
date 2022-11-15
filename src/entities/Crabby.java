@@ -31,7 +31,7 @@ public class Crabby extends Enemy {
 
     public void update(int[][] levelData, Player player) {
 
-        updateMove(levelData, player);
+        updateBehaviour(levelData, player);
         updateAnimationTick();
         updateAttackBox();
     }
@@ -44,10 +44,11 @@ public class Crabby extends Enemy {
         attackBox.y = hitbox.y;
     }
 
-    // Method to update movement of enemy
+    // Method to update behaviour of enemy
     // If enemy just spawned (first update), then make them fall to the ground from the air
     // Otherwise, enemy patrols in a set pattern until it sees a player
-    private void updateMove(int[][] levelData, Player player) {
+    // If enemy sees player, it turns & walk towards the player
+    private void updateBehaviour(int[][] levelData, Player player) {
 
         if(firstUpdate) {
 
@@ -76,6 +77,18 @@ public class Crabby extends Enemy {
                     }
 
                     move(levelData);
+                    break;
+                case ATTACK:
+                    if(animIndex == 0) {
+
+                        attackChecked = false;
+                    }
+
+                    if(animIndex == 3 && !attackChecked) {
+                        checkEnemyHit(attackBox, player);
+                    }
+                    break;
+                case HIT:
                     break;
             }
         }

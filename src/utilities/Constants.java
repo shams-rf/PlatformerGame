@@ -47,6 +47,28 @@ public class Constants {
 
             return 0;
         }
+
+        public static int getMaxHealth(int enemy_type) {
+
+            switch(enemy_type) {
+
+                case CRABBY:
+                    return 10;
+                default:
+                    return 1;
+            }
+        }
+
+        public static int getEnemyDamage(int enemy_type) {
+
+            switch(enemy_type) {
+
+                case CRABBY:
+                    return 15;
+                default:
+                    return 0;
+            }
+        }
     }
 
     // Class that stores sizes for game background such as clouds

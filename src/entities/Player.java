@@ -1,5 +1,6 @@
 package entities;
 
+import gamestates.Playing;
 import main.Game;
 import utilities.LoadSave;
 
@@ -64,8 +65,13 @@ public class Player extends Entity{
     private int flipX = 0;
     private int flipW = 1;
 
-    public Player(float x, float y, int width, int height) {
+    private boolean attackChecked;
+
+    private Playing playing;
+
+    public Player(float x, float y, int width, int height, Playing playing) {
         super(x, y, width, height);
+        this.playing = playing;
         loadAnimations();
         initHitbox(x, y, (int) (20 * Game.SCALE), (int) (27 * Game.SCALE));
         initAttackBox();
@@ -80,11 +86,35 @@ public class Player extends Entity{
     public void update() {
 
         updateHealthBar();
+
+        if(currentHealth <= 0) {
+
+            playing.setGameOver(true);
+            return;
+        }
+
         updateAttackBox();
 
         updatePos();
+        
+        if(attacking) {
+
+            checkAttack();
+        }
+        
         updateAnimTick();
         setAnimation();
+    }
+
+    private void checkAttack() {
+
+        if(attackChecked || animIndex != 1) {
+
+            return;
+        }
+
+        attackChecked = true;
+        playing.checkEnemyHit(attackBox);
     }
 
     // Update attack box so wherever player moves, the attack box moves with it
@@ -116,7 +146,6 @@ public class Player extends Entity{
                 (int)(hitbox.y - yDrawOffset),
                 width * flipW, height, null);
 
-        drawAttackBox(g, levelOffset);
         drawUI(g);
     }
 
@@ -147,6 +176,7 @@ public class Player extends Entity{
 
                 animIndex = 0;
                 attacking = false;
+                attackChecked = false;
             }
         }
     }
@@ -181,6 +211,13 @@ public class Player extends Entity{
         if(attacking) {
 
             playerAction = ATTACK;
+
+            if(startAnim != ATTACK) {
+
+                animIndex = 1;
+                animTick = 0;
+                return;
+            }
         }
 
         // If animation isn't equal to the current player action (a new animation has been called)
@@ -402,5 +439,25 @@ public class Player extends Entity{
 
     public void setJump(boolean jump) {
         this.jump = jump;
+    }
+
+    // Reset all player variables to their original value
+    // Reset starting position of player
+    public void resetAll() {
+
+        resetDirBooleans();
+        inAir = false;
+        attacking = false;
+        moving = false;
+        playerAction = IDLE;
+        currentHealth = maxHealth;
+
+        hitbox.x = x;
+        hitbox.y = y;
+
+        if(!isEntityOnFloor(hitbox, levelData)) {
+
+            inAir = true;
+        }
     }
 }

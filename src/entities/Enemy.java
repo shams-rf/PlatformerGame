@@ -1,6 +1,9 @@
 package entities;
 
+import gamestates.Playing;
 import main.Game;
+
+import java.awt.geom.Rectangle2D;
 
 import static utilities.Constants.Directions.*;
 import static utilities.Constants.EnemyConstants.*;
@@ -29,10 +32,19 @@ public abstract class Enemy extends Entity {
     protected int tileY;    // Y position of tile that enemy is standing on
     protected float attackDistance = Game.TILES_SIZE;
 
+    // Variable to handle enemy health
+    protected int maxHealth;
+    protected int currentHealth;
+
+    protected boolean active = true;
+    protected boolean attackChecked;
+
     public Enemy(float x, float y, int width, int height, int enemyType) {
         super(x, y, width, height);
         this.enemyType = enemyType;
         initHitbox(x, y, width, height);
+        maxHealth = getMaxHealth(enemyType);
+        currentHealth = maxHealth;
     }
 
     // Method called when an enemy is first added into the game
@@ -148,6 +160,35 @@ public abstract class Enemy extends Entity {
         animIndex = 0;
     }
 
+    // Method that handles an enemy getting hit
+    // A value is subtracted from the current enemy health
+    // Check if current health is less than or equal to 0. If yes then change the state to dead. Otherwise, change the state to hit
+    public void hurt(int amount) {
+
+        currentHealth -= amount;
+
+        if(currentHealth <= 0) {
+
+            newState(DEAD);
+        }
+        else {
+
+            newState(HIT);
+        }
+    }
+
+    // Method to check if player has been hit by enemy
+    // If the attack box of enemy intersects the hitbox of player at index 3 of attack animation (arms out wide), decrease player health
+    protected void checkEnemyHit(Rectangle2D.Float attackBox, Player player) {
+
+        if(attackBox.intersects(player.hitbox)) {
+
+            player.changeHealth(-getEnemyDamage(enemyType));
+        }
+
+        attackChecked = true;
+    }
+
     protected void updateAnimationTick() {
 
         animTick++;
@@ -160,9 +201,11 @@ public abstract class Enemy extends Entity {
             if(animIndex >= getSpriteAmount(enemyType, enemyState)) {
 
                 animIndex = 0;
-                if(enemyState == ATTACK) {
 
-                    enemyState = IDLE;
+                switch(enemyState) {
+
+                    case ATTACK, HIT -> enemyState = IDLE;
+                    case DEAD -> active = false;
                 }
             }
         }
@@ -181,11 +224,28 @@ public abstract class Enemy extends Entity {
         }
     }
 
+    // Method to reset enemy variables to their original value
+    // Reset position of enemy to starting position
+    public void resetEnemy() {
+
+        hitbox.x = x;
+        hitbox.y = y;
+        firstUpdate = true;
+        currentHealth = maxHealth;
+        newState(IDLE);
+        active = true;
+        fallSpeed = 0;
+    }
+
     public int getEnemyState() {
         return enemyState;
     }
 
     public int getAnimIndex() {
         return animIndex;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 }
