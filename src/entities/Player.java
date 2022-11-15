@@ -40,6 +40,23 @@ public class Player extends Entity{
     private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
     private boolean inAir = false;
 
+    // Variables to store health & power bar sizes & position
+    BufferedImage statusBarImg;
+    private int statusBarWidth = (int) (192 * Game.SCALE);
+    private int statusBarHeight = (int) (58 * Game.SCALE);
+    private int statusBarX = (int) (10 * Game.SCALE);
+    private int statusBarY = (int) (10 * Game.SCALE);
+
+    // Variables to store size & position for health bar itself
+    private int healthBarWidth = (int) (150 * Game.SCALE);
+    private int healthBarHeight = (int) (4 * Game.SCALE);
+    private int healthBarXStart = (int) (34 * Game.SCALE);
+    private int healthBarYStart = (int) (14 * Game.SCALE);
+
+    private int maxHealth = 100;
+    private int currentHealth = maxHealth;
+    private int healthWidth = healthBarWidth;
+
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
@@ -49,16 +66,31 @@ public class Player extends Entity{
     // Method to implement logic for game and update animations
     public void update() {
 
+        updateHealthBar();
+
         updatePos();
         updateAnimTick();
         setAnimation();
+    }
+
+    private void updateHealthBar() {
+
+        healthWidth = (int) ((currentHealth / (float) maxHealth) * healthBarWidth);
     }
 
     // Method to render & draw player
     public void render(Graphics g, int levelOffset) {
 
         g.drawImage(animations[playerAction][animIndex], (int)(hitbox.x - xDrawOffset) - levelOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
-//        drawHitbox(g, levelOffset);
+
+        drawUI(g);
+    }
+
+    private void drawUI(Graphics g) {
+
+        g.drawImage(statusBarImg, statusBarX, statusBarY, statusBarWidth, statusBarHeight, null);
+        g.setColor(Color.red);
+        g.fillRect(healthBarXStart + statusBarX, healthBarYStart + statusBarY, healthWidth, healthBarHeight);
     }
 
     // Method to implement animation by cycling through idle animation array at a given speed
@@ -239,6 +271,23 @@ public class Player extends Entity{
         }
     }
 
+    // Method to change current player health
+    // Prevent current health going under 0 or over max health
+    public void changeHealth(int value) {
+
+        currentHealth += value;
+
+        if(currentHealth <= 0) {
+
+            currentHealth = 0;
+            //gameOver();
+        }
+        else if(currentHealth >= maxHealth) {
+
+            currentHealth = maxHealth;
+        }
+    }
+
     // Method to load and display sprite animations by creating array to store sub images then using a for loop
     private void loadAnimations() {
 
@@ -252,6 +301,8 @@ public class Player extends Entity{
                 animations[i][j] = img.getSubimage(j*64, i*40, 64, 40);
             }
         }
+
+        statusBarImg = LoadSave.getSpriteAtlas(LoadSave.STATUS_BAR);
     }
 
     // Method to load level data to allow collision detection
