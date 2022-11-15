@@ -5,6 +5,7 @@ import utilities.LoadSave;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,20 +58,45 @@ public class Player extends Entity{
     private int currentHealth = maxHealth;
     private int healthWidth = healthBarWidth;
 
+    private Rectangle2D.Float attackBox;    // If enemy inside attack box when player attacks, enemy dies
+
     public Player(float x, float y, int width, int height) {
         super(x, y, width, height);
         loadAnimations();
         initHitbox(x, y, (int) (20 * Game.SCALE), (int) (27 * Game.SCALE));
+        initAttackBox();
+    }
+
+    private void initAttackBox() {
+
+        attackBox = new Rectangle2D.Float(x, y, (int) (20 * Game.SCALE), (int) (20 * Game.SCALE));
     }
 
     // Method to implement logic for game and update animations
     public void update() {
 
         updateHealthBar();
+        updateAttackBox();
 
         updatePos();
         updateAnimTick();
         setAnimation();
+    }
+
+    // Update attack box so wherever player moves, the attack box moves with it
+    // Player hitbox is in correlation with attack box but with some offsets
+    private void updateAttackBox() {
+
+        if(right) {
+
+            attackBox.x = hitbox.x + hitbox.width + (int) (Game.SCALE * 10);
+        }
+        else if(left) {
+
+            attackBox.x = hitbox.x - hitbox.width - (int) (Game.SCALE * 10);
+        }
+
+        attackBox.y = hitbox.y + (Game.SCALE * 10);
     }
 
     private void updateHealthBar() {
@@ -83,7 +109,14 @@ public class Player extends Entity{
 
         g.drawImage(animations[playerAction][animIndex], (int)(hitbox.x - xDrawOffset) - levelOffset, (int)(hitbox.y - yDrawOffset), width, height, null);
 
+        drawAttackBox(g, levelOffset);
         drawUI(g);
+    }
+
+    private void drawAttackBox(Graphics g, int levelOffsetX) {
+
+        g.setColor(Color.red);
+        g.drawRect((int) attackBox.x - levelOffsetX, (int) attackBox.y, (int) attackBox.width, (int) attackBox.height);
     }
 
     private void drawUI(Graphics g) {
@@ -140,7 +173,7 @@ public class Player extends Entity{
 
         if(attacking) {
 
-            playerAction = ATTACK_1;
+            playerAction = ATTACK;
         }
 
         // If animation isn't equal to the current player action (a new animation has been called)
@@ -294,7 +327,7 @@ public class Player extends Entity{
         // Load player sprite image
         BufferedImage img = LoadSave.getSpriteAtlas(LoadSave.PLAYER_ATLAS);
 
-        animations = new BufferedImage[9][6];
+        animations = new BufferedImage[7][8];
 
         for(int i = 0; i < animations.length; i++) {
             for(int j = 0; j < animations[i].length; j++) {
