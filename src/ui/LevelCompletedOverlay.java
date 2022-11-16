@@ -54,17 +54,61 @@ public class LevelCompletedOverlay {
 
     public void update() {
 
+        next.update();
+        menu.update();
+    }
+
+    // Method that returns true if mouse is inside button when being moved or pressed
+    private boolean isIn(UrmButton b, MouseEvent e) {
+
+        return b.getBounds().contains(e.getX(), e.getY());
     }
 
     public void mouseMoved(MouseEvent e) {
 
+        next.setMouseOver(false);
+        menu.setMouseOver(false);
+
+        if(isIn(menu, e)) {
+
+            menu.setMouseOver(true);
+        }
+        else if(isIn(next, e)) {
+
+            next.setMouseOver(true);
+        }
     }
 
     public void mousePressed(MouseEvent e) {
 
+        if(isIn(menu, e)) {
+
+            menu.setMousePressed(true);
+        }
+        else if(isIn(next, e)) {
+
+            next.setMousePressed(true);
+        }
     }
 
     public void mouseReleased(MouseEvent e) {
 
+        if(isIn(menu, e)) {
+
+            if(menu.isMousePressed()) {
+
+                System.out.println("Menu!");
+            }
+        }
+        else if(isIn(next, e)) {
+
+            if(next.isMousePressed()) {
+
+                System.out.println("Next!");
+            }
+        }
+
+        menu.resetBools();
+        next.resetBools();
     }
 }
