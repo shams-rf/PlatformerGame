@@ -5,6 +5,7 @@ import entities.Player;
 import levels.LevelManager;
 import main.Game;
 import ui.GameOverOverlay;
+import ui.LevelCompletedOverlay;
 import ui.PauseOverlay;
 import utilities.LoadSave;
 
@@ -25,6 +26,7 @@ public class Playing extends State implements Statemethods {
     private EnemyManager enemyManager;
     private PauseOverlay pauseOverlay;
     private GameOverOverlay gameOverOverlay;
+    private LevelCompletedOverlay levelCompletedOverlay;
     private boolean paused = false; // Toggle to show paused screen
 
     // Variables to allow shifting of level once player passes border
@@ -65,6 +67,7 @@ public class Playing extends State implements Statemethods {
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
         pauseOverlay = new PauseOverlay(this);
         gameOverOverlay = new GameOverOverlay(this);
+        levelCompletedOverlay = new LevelCompletedOverlay(this);
     }
 
     @Override
@@ -130,6 +133,8 @@ public class Playing extends State implements Statemethods {
 
             gameOverOverlay.draw(g);
         }
+
+        levelCompletedOverlay.draw(g);
     }
 
     // Method to draw clouds in background game environment
