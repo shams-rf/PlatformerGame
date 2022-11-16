@@ -34,6 +34,7 @@ public class Game implements Runnable {
         initClasses();  // Initialise player, enemy classes, etc.
         gamePanel = new GamePanel(this);
         gameWindow = new GameWindow(gamePanel);
+        gamePanel.setFocusable(true);
         gamePanel.requestFocus();   // Request input focus for game panel
         startGameLoop();
     }
