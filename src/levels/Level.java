@@ -3,6 +3,7 @@ package levels;
 import entities.Crabby;
 import main.Game;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
@@ -14,6 +15,7 @@ public class Level {
     private BufferedImage img;
     private int[][] levelData;
     private ArrayList<Crabby> crabs;
+    private Point playerSpawn;
 
     // Variables that store offset for each level
     private int levelTilesWide; // Store entire width of level
@@ -25,6 +27,12 @@ public class Level {
         createLevelData();
         createEnemies();
         calcLevelOffsets();
+        calcPlayerSpawn();
+    }
+
+    private void calcPlayerSpawn() {
+
+        playerSpawn = GetPlayerSpawn(img);
     }
 
     private void calcLevelOffsets() {
@@ -60,5 +68,9 @@ public class Level {
 
     public ArrayList<Crabby> getCrabs() {
         return crabs;
+    }
+
+    public Point getPlayerSpawn() {
+        return playerSpawn;
     }
 }

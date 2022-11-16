@@ -65,6 +65,7 @@ public class Playing extends State implements Statemethods {
 
         resetAll();
         levelManager.loadNextLevel();
+        player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
     }
 
     // Method to load enemies at beginning of level
@@ -85,6 +86,7 @@ public class Playing extends State implements Statemethods {
         enemyManager = new EnemyManager(this);
         player = new Player(200, 200, (int)(64 * Game.SCALE), (int)(40 * Game.SCALE), this);
         player.loadLevelData(levelManager.getCurrentLevel().getLevelData());
+        player.setSpawn(levelManager.getCurrentLevel().getPlayerSpawn());
         pauseOverlay = new PauseOverlay(this);
         gameOverOverlay = new GameOverOverlay(this);
         levelCompletedOverlay = new LevelCompletedOverlay(this);
