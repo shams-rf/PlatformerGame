@@ -6,8 +6,11 @@ import main.Game;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import static utilities.Constants.EnemyConstants.CRABBY;
@@ -17,7 +20,6 @@ public class LoadSave {
 
     public static final String PLAYER_ATLAS = "player_sprites.png";
     public static final String LEVEL_ATLAS = "outside_sprites.png";
-    public static final String LEVEL_ONE_DATA = "level_one_data_long.png";
     public static final String MENU_BUTTONS = "button_atlas.png";
     public static final String MENU_BACKGROUND = "menu_background.png";
     public static final String PAUSE_BACKGROUND = "pause_menu.png";
@@ -58,48 +60,48 @@ public class LoadSave {
         return img;
     }
 
-    // Method to add a crabby at a position in the game
-    // Nested for loop goes over level data. If a green colour from level data matches CRABBY value which is 0, add new crabby at that position
-    public static ArrayList<Crabby> getCrabs() {
+    // Method that returns a sorted array of images for all levels
+    // First, get reference to files
+    // Next, get identifier for files from those references
+    // Store files in array, then sort the files
+    // Store images from files in array
+    // Finally, return array of images
+    public static BufferedImage[] getAllLevels() {
 
-        BufferedImage img = getSpriteAtlas(LEVEL_ONE_DATA);
-        ArrayList<Crabby> list = new ArrayList<>();
+        URL url = LoadSave.class.getResource("/lvls");
+        File file = null;
 
-        for(int j = 0; j < img.getHeight(); j++) {
+        try {
+            file = new File(url.toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
 
-            for(int i = 0; i < img.getWidth(); i++) {
+        File[] files = file.listFiles();
+        File[] filesSorted = new File[files.length];
 
-                Color color = new Color(img.getRGB(i, j));
-                int value = color.getGreen();
-                if(value == CRABBY) {
+        for(int i = 0; i < filesSorted.length; i++) {
 
-                    list.add(new Crabby(i * Game.TILES_SIZE, j * Game.TILES_SIZE));
+            for(int j = 0; j < files.length; j++) {
+
+                if(files[j].getName().equals((i + 1) + ".png")) {
+
+                    filesSorted[i] = files[j];
                 }
             }
         }
-        return list;
-    }
 
-    // Method to allow level editing
-    // Store each pixel of the level image to make up the whole level
-    public static int[][] getLevelData() {
+        BufferedImage[] imgs = new BufferedImage[filesSorted.length];
 
-        BufferedImage img = getSpriteAtlas(LEVEL_ONE_DATA);
-        int[][] levelData = new int[img.getHeight()][img.getWidth()];
+        for(int i = 0; i < imgs.length; i++) {
 
-        for(int j = 0; j < img.getHeight(); j++) {
-
-            for(int i = 0; i < img.getWidth(); i++) {
-
-                Color color = new Color(img.getRGB(i, j));
-                int value = color.getRed();
-                if(value >= 48) {
-
-                    value = 0;
-                }
-                levelData[j][i] = value;
+            try {
+                imgs[i] = ImageIO.read(filesSorted[i]);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-        return levelData;
+
+        return imgs;
     }
 }

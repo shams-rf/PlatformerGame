@@ -1,8 +1,14 @@
 package utilities;
 
+import entities.Crabby;
 import main.Game;
 
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
+import static utilities.Constants.EnemyConstants.CRABBY;
 
 // Class that stores static helper methods for use by any class in the program
 public class HelpMethods {
@@ -157,5 +163,48 @@ public class HelpMethods {
 
             return isAllTilesWalkable(firstXTile, secondXTile, tileY, levelData);
         }
+    }
+
+    // Method to allow level editing
+    // Store each pixel of the level image to make up the whole level
+    public static int[][] GetLevelData(BufferedImage img) {
+
+        int[][] levelData = new int[img.getHeight()][img.getWidth()];
+
+        for(int j = 0; j < img.getHeight(); j++) {
+
+            for(int i = 0; i < img.getWidth(); i++) {
+
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getRed();
+                if(value >= 48) {
+
+                    value = 0;
+                }
+                levelData[j][i] = value;
+            }
+        }
+        return levelData;
+    }
+
+    // Method to add a crabby at a position in the game
+    // Nested for loop goes over level data. If a green colour from level data matches CRABBY value which is 0, add new crabby at that position
+    public static ArrayList<Crabby> GetCrabs(BufferedImage img) {
+
+        ArrayList<Crabby> list = new ArrayList<>();
+
+        for(int j = 0; j < img.getHeight(); j++) {
+
+            for(int i = 0; i < img.getWidth(); i++) {
+
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getGreen();
+                if(value == CRABBY) {
+
+                    list.add(new Crabby(i * Game.TILES_SIZE, j * Game.TILES_SIZE));
+                }
+            }
+        }
+        return list;
     }
 }

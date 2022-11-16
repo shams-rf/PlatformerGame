@@ -33,9 +33,7 @@ public class Playing extends State implements Statemethods {
     private int xLevelOffset;   // Offset added or removed to draw level further to left or right
     private int leftBorder = (int) (0.2 * Game.GAME_WIDTH);
     private int rightBorder = (int) (0.8 * Game.GAME_WIDTH);
-    private int levelTilesWide = LoadSave.getLevelData()[0].length; // Store entire width of level
-    private int maxTilesOffset = levelTilesWide - Game.TILES_IN_WIDTH;  // (entire level width - visible tiles)
-    private int maxLevelOffsetX = maxTilesOffset * Game.TILES_SIZE;
+    private int maxLevelOffsetX;
 
     // Variables to store images for environment
     private BufferedImage backgroundImg, bigCloud, smallCloud;
@@ -43,7 +41,7 @@ public class Playing extends State implements Statemethods {
     private Random rnd = new Random();
 
     private boolean gameOver;
-    private boolean levelCompleted = true;
+    private boolean levelCompleted;
 
     public Playing(Game game) {
         super(game);
@@ -57,6 +55,27 @@ public class Playing extends State implements Statemethods {
 
             smallCloudsPos[i] = (int) (90 * Game.SCALE) + rnd.nextInt((int) (100 * Game.SCALE));
         }
+
+        calcLevelOffset();
+        loadStartLevel();
+    }
+
+    // Method to load next level when current level completed & next button pressed
+    public void loadNextLevel() {
+
+        resetAll();
+        levelManager.loadNextLevel();
+    }
+
+    // Method to load enemies at beginning of level
+    private void loadStartLevel() {
+
+        enemyManager.loadEnemies(levelManager.getCurrentLevel());
+    }
+
+    private void calcLevelOffset() {
+
+        maxLevelOffsetX = levelManager.getCurrentLevel().getLevelOffset();
     }
 
     // Method to initialise sprites classes
@@ -169,6 +188,7 @@ public class Playing extends State implements Statemethods {
 
         gameOver = false;
         paused = false;
+        levelCompleted = false;
         player.resetAll();
         enemyManager.resetAllEnemies();
     }
@@ -306,6 +326,15 @@ public class Playing extends State implements Statemethods {
         }
     }
 
+    public void setLevelCompleted(boolean levelCompleted) {
+
+        this.levelCompleted = levelCompleted;
+    }
+
+    public void setMaxLevelOffsetX(int maxLevelOffsetX) {
+        this.maxLevelOffsetX = maxLevelOffsetX;
+    }
+
     // Method to unpause game & hide pause menu
     public void unpauseGame() {
 
@@ -320,5 +349,9 @@ public class Playing extends State implements Statemethods {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public EnemyManager getEnemyManager() {
+        return enemyManager;
     }
 }
