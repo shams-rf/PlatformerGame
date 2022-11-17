@@ -17,3 +17,7 @@ To run the program and start playing, follow these steps
 1. Use the W A S D buttons to move the player sprite and Spacebar to jump. To attack, click the left mouse button
 
 ## Checklist
+- [x] Import appropriate assets for levels, backgrounds, menu, sprites
+- [ ] Add sounds and music files then implement into the game
+- [x] Create classes for entities, game states, input, levels, UI, utilities
+- [x] Implement player and enemy movement, actions, level terrain detection
